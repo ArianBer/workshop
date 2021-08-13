@@ -26,6 +26,12 @@ label {
   padding: 15px;
   border: 1px solid #f1f1f1;
 }
+.sidebar input ~ ul{
+  display: none;
+}
+.sidebar input[type=checkbox]:checked ~ ul {
+  display: block;
+}
 
 .wsh-app{
   margin-top: 50px;

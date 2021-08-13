@@ -37,8 +37,7 @@ const Sidebar = ({ setCategoryClicked }) => {
               {parent.name}
             </label>
             <ul>
-              {childVisible ? category
-                .filter((res) => res.parent === parent.id)
+                {category.filter((res) => res.parent === parent.id)
                 .map((subParent) => (
                   <li>
                     <input
@@ -96,7 +95,7 @@ const Sidebar = ({ setCategoryClicked }) => {
                         ))}
                     </ul>
                   </li>
-                )):null}
+                ))}
             </ul>
           </li>
         ))}
