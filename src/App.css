@@ -23,8 +23,11 @@ label {
 }
 
 .sidebar{
-  padding-top: 50px;
   padding: 15px;
-  margin: 40px 0px;
   border: 1px solid #f1f1f1;
+}
+
+.wsh-app{
+  margin-top: 50px;
+  margin: 40px 0px;
 }

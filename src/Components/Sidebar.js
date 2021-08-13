@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 const Sidebar = ({ setCategoryClicked }) => {
   const [category, setCategory] = useState([""]);
   const [categoryParent, setcategoryParent] = useState([""]);
+    const [childVisible, setChildVisiblity] = useState(false);
 
   useEffect(() => {
     fetch("https://frakton.dev/articles.php")
@@ -10,63 +11,12 @@ const Sidebar = ({ setCategoryClicked }) => {
       .then((data) => {setCategory(data);setcategoryParent(data)});
   }, []);
 
-  const Tree = ({ data = [] }) => {
-    return (
-      <div className="d-tree">
-        <ul className="d-flex d-tree-container flex-column">
-          {data.map((tree) => (
-            <TreeNode node={tree} />
-          ))}
-        </ul>
-      </div>
-    );
-  };
-  
-  const TreeNode = ({ node }) => {
-    const [childVisible, setChildVisiblity] = useState(false);
-  
-    const hasChild = node.children ? true : false;
-  
-    return (
-      <li className="d-tree-node border-0">
-        <div className="d-flex" onClick={(e) => setChildVisiblity((v) => !v)}>
-          {hasChild && (
-            <div
-              className={`d-inline d-tree-toggler ${
-                childVisible ? "active" : ""
-              }`}>
-              <svg xmlns="http://www.w3.org/2000/svg" style={{display: "none"}}>
-                  <symbol id="checkmark" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
-                      </path>
-                  </symbol>
-              </svg>
-              <input id="tmp" type="checkbox" class="promoted-input-checkbox"/>
-              <svg><use xlinkHref="#checkmark" /></svg>      
-            </div>
-          )}
-  
-          <div className="col d-tree-head">
-            {node.name}
-          </div>
-        </div>
-  
-        {hasChild && childVisible && (
-          <div className="d-tree-content">
-            <ul className="d-flex d-tree-container flex-column">
-              <Tree data={node.children} />
-            </ul>
-          </div>
-        )}
-      </li>
-    );
-  };
-  
   const returnCategories = (parent, children, subChildren, subsubChildren) => {
     const parentCategory = parent ? parent + "/": "";
     const childrenCategory = children ? children + "/" : "";
     const subChildrenCategory = subChildren ? subChildren + "/" : "";
     const subsubChildrenCategory = subsubChildren ? subsubChildren + "/" : "";
+
     setCategoryClicked(
       parentCategory  +
       childrenCategory +
@@ -76,30 +26,26 @@ const Sidebar = ({ setCategoryClicked }) => {
 
   };
 
-  console.log(categoryParent.forEach(element => {
-    
-  }));
-
   return (
     <div className="sidebar">
       <h3>Filter by Category</h3>
       <ul>
         {categoryParent.filter((res) => res.parent === 0).map((parent) => (
           <li>
-            <input type="checkbox" id="option" onClick={(e) => returnCategories(parent.name)}/>
+            <input type="checkbox" id="option" onClick={(e) => {returnCategories(e.target.checked ?  parent.name : null);setChildVisiblity((v) => !v)}}/>
             <label for="option" >
               {parent.name}
             </label>
             <ul>
-              {category
+              {childVisible ? category
                 .filter((res) => res.parent === parent.id)
                 .map((subParent) => (
                   <li>
                     <input
                       type="checkbox"
                       id="option"
-                      onClick={() =>
-                        returnCategories(parent.name, subParent.name)
+                      onClick={(e) =>
+                        returnCategories(parent.name, e.target.checked ? subParent.name : null)
                       }
                     />
                     <label for="option"> {subParent.name}</label>
@@ -111,11 +57,13 @@ const Sidebar = ({ setCategoryClicked }) => {
                             <input
                               type="checkbox"
                               id="option"
-                              onClick={() =>
+                              onClick={(e) =>
                                 returnCategories(
                                   parent.name,
                                   subParent.name,
-                                  subsubParent.name
+                                  e.target.checked ?
+                                  subsubParent.name :
+                                  null
                                 )
                               }
                             />
@@ -128,17 +76,17 @@ const Sidebar = ({ setCategoryClicked }) => {
                                     <input
                                       type="checkbox"
                                       id="option"
-                                      onClick={() =>
+                                      onClick={(e) =>
                                         returnCategories(
                                           parent.name,
                                           subParent.name,
                                           subsubParent.name,
-                                          lastChildren.name
+                                          e.target.checked ?
+                                          lastChildren.name :null
                                         )
                                       }
                                     />
                                     <label for="option">
-                                      {" "}
                                       {lastChildren.name}
                                     </label>
                                   </li>
@@ -148,7 +96,7 @@ const Sidebar = ({ setCategoryClicked }) => {
                         ))}
                     </ul>
                   </li>
-                ))}
+                )):null}
             </ul>
           </li>
         ))}
