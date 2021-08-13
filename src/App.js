@@ -1,23 +1,22 @@
-import logo from './logo.svg';
 import './App.css';
+import React, {useState} from 'react';
+import Sidebar from './Components/Sidebar';
 
 function App() {
+  const [categoryClicked, setCategoryClicked] = useState('');
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="wsh-app">
+      <div className="container">
+        <div className="row">
+          <div className="col-lg-4">
+            <Sidebar setCategoryClicked={setCategoryClicked}/>
+          </div>
+          <div className="col-lg-8">
+            <p>{categoryClicked}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
